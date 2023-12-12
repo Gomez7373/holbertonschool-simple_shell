@@ -3,8 +3,10 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <ctype.h>
 
 #define MAX_COMMAND_LENGTH 1024
+#define MAX_ARGS 64
 extern char **environ;
 
 /* Function to trim leading and trailing spaces */
@@ -17,11 +19,11 @@ char *trim_whitespace(char *str) {
     if (*str == 0)  /* All spaces? */
         return str;
 
-    /* Trim trailing space*/
+    /* Trim trailing space */
     end = str + strlen(str) - 1;
     while (end > str && isspace((unsigned char)*end)) end--;
 
-    /* Write new null terminator character*/
+    /* Write new null terminator character */
     *(end + 1) = 0;
 
     return str;
@@ -39,22 +41,30 @@ int get_command(char *command, int interactive) {
     return 1;
 }
 
-/* Function to execute a command */
-void execute_command(const char *command) {
+/* Function to execute a command with arguments */
+void execute_command(char *full_command) {
     pid_t pid;
     int status;
-    char *argv[2];
+    char *argv[MAX_ARGS];
+    char *token;
+    int i = 0;
 
-    argv[0] = (char *)command;  
-    argv[1] = NULL;
+    /* Split the command into words */
+    token = strtok(full_command, " ");
+    while (token != NULL && i < MAX_ARGS - 1) {
+        argv[i++] = token;
+        token = strtok(NULL, " ");
+    }
+    argv[i] = NULL;
 
+    /* Execute the command */
     pid = fork();
     if (pid == -1) {
         perror("fork");
     } else if (pid == 0) {
         /* Child process */
-        if (execve(command, argv, environ) == -1) {
-            perror(command);
+        if (execve(argv[0], argv, environ) == -1) {
+            perror(argv[0]);
         }
         exit(EXIT_FAILURE);
     } else {
