@@ -4,42 +4,11 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <ctype.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 
-#define MAX_COMMAND_LENGTH 1024
 #define MAX_ARGS 64
 extern char **environ;
-
-/* Function to trim leading and trailing spaces */
-char *trim_whitespace(char *str) {
-    char *end;
-
-    /* Trim leading space */
-    while (isspace((unsigned char)*str)) str++;
-
-    if (*str == 0)  /* All spaces? */
-        return str;
-
-    /* Trim trailing space */
-    end = str + strlen(str) - 1;
-    while (end > str && isspace((unsigned char)*end)) end--;
-
-    /* Write new null terminator character */
-    *(end + 1) = 0;
-
-    return str;
-}
-
-/* Function to display a prompt and read a command */
-int get_command(char *command, int interactive) {
-    if (interactive) {
-        printf("#cisfun$ ");
-    }
-    if (fgets(command, MAX_COMMAND_LENGTH, stdin) == NULL) {
-        return 0;  /* EOF or error */
-    }
-    command[strcspn(command, "\n")] = 0;  /* Remove newline character */
-    return 1;
-}
 
 /* Function to execute a command with arguments */
 void execute_command(char *full_command) {
@@ -77,14 +46,15 @@ void execute_command(char *full_command) {
 }
 
 int main(void) {
-    char command[MAX_COMMAND_LENGTH];
+    char *command;
     int interactive = isatty(STDIN_FILENO);
 
-    while (get_command(command, interactive)) {
-        char *trimmed_command = trim_whitespace(command);
-        if (strlen(trimmed_command) > 0) {
-            execute_command(trimmed_command);
+    while ((command = readline("#cisfun$ ")) != NULL) {
+        if (strlen(command) > 0) {
+            add_history(command);
+            execute_command(command);
         }
+        free(command);
     }
 
     if (interactive) {
