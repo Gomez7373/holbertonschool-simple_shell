@@ -65,14 +65,16 @@ void execute_command(char *full_command) {
 
     if (pid == 0) {
         /* Child process */
-        if (execvp(argv[0], argv) == -1) {
-            perror(argv[0]);
-            exit(EXIT_FAILURE);
-        }
+        execvp(argv[0], argv);
+        fprintf(stderr, "./hsh: %s: not found\n", argv[0]);
+        exit(127);
     } else {
         /* Parent process */
         int status;
         waitpid(pid, &status, 0);
+        if (WIFEXITED(status)) {
+            exit(WEXITSTATUS(status));
+        }
     }
 }
 
