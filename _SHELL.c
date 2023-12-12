@@ -46,7 +46,7 @@ void execute_command(char *full_command) {
     char *argv[MAX_ARGS];
     char *token;
     int i = 0;
-    pid_t pid;
+    pid_t pid;  /* Declaration moved to the top of the block */
 
     /* Split the command into words */
     token = strtok(full_command, " ");
@@ -65,16 +65,14 @@ void execute_command(char *full_command) {
 
     if (pid == 0) {
         /* Child process */
-        execvp(argv[0], argv);
-        fprintf(stderr, "./hsh: %s: not found\n", argv[0]);
-        exit(127);
+        if (execvp(argv[0], argv) == -1) {
+            perror(argv[0]);
+            exit(EXIT_FAILURE);
+        }
     } else {
         /* Parent process */
         int status;
         waitpid(pid, &status, 0);
-        if (WIFEXITED(status)) {
-            exit(WEXITSTATUS(status));
-        }
     }
 }
 
