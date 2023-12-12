@@ -7,6 +7,26 @@
 #define MAX_COMMAND_LENGTH 1024
 extern char **environ;
 
+/* Function to trim leading and trailing spaces */
+char *trim_whitespace(char *str) {
+    char *end;
+
+    /* Trim leading space */
+    while (isspace((unsigned char)*str)) str++;
+
+    if (*str == 0)  /* All spaces? */
+        return str;
+
+    /* Trim trailing space*/
+    end = str + strlen(str) - 1;
+    while (end > str && isspace((unsigned char)*end)) end--;
+
+    /* Write new null terminator character*/
+    *(end + 1) = 0;
+
+    return str;
+}
+
 /* Function to display a prompt and read a command */
 int get_command(char *command, int interactive) {
     if (interactive) {
@@ -48,8 +68,9 @@ int main(void) {
     int interactive = isatty(STDIN_FILENO);
 
     while (get_command(command, interactive)) {
-        if (strlen(command) > 0) {
-            execute_command(command);
+        char *trimmed_command = trim_whitespace(command);
+        if (strlen(trimmed_command) > 0) {
+            execute_command(trimmed_command);
         }
     }
 
