@@ -32,7 +32,7 @@ char *trim_whitespace(char *str) {
 /* Function to display a prompt and read a command */
 int get_command(char *command, int interactive) {
     if (interactive) {
-        printf("#cisfun$ ");
+        printf("$ ");
     }
     if (fgets(command, MAX_COMMAND_LENGTH, stdin) == NULL) {
         return 0;  /* EOF or error */
@@ -63,13 +63,13 @@ void execute_command(char *full_command) {
         perror("fork");
     } else if (pid == 0) {
         /* Child process */
-        if (execvp(argv[0], argv) == -1) {
+        if (execve(argv[0], argv, environ) == -1) {
             perror(argv[0]);
         }
         exit(EXIT_FAILURE);
     } else {
         /* Parent process */
-        waitpid(pid, &status, 0);
+        wait(&status);
     }
 }
 
@@ -89,4 +89,3 @@ int main(void) {
     }
     return (0);
 }
-
