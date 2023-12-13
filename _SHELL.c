@@ -4,11 +4,61 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <ctype.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#define MAX_COMMAND_LENGTH 1024/*NEW*/
+#include <termios.h>
+
+#define MAX_COMMAND_LENGTH 1024
 #define MAX_ARGS 64
 extern char **environ;
+
+/* Function to trim leading and trailing spaces */
+char *trim_whitespace(char *str) {
+    char *end;
+    while (isspace((unsigned char)*str)) str++;
+
+    if (*str == 0)  /* All spaces? */
+        return str;
+
+    end = str + strlen(str) - 1;
+    while (end > str && isspace((unsigned char)*end)) end--;
+
+    /* Write new null terminator character */
+    *(end + 1) = 0;
+
+    return str;
+}
+
+/* Function to disable input buffering and echoing */
+void disable_raw_mode() {
+    struct termios term;
+    tcgetattr(STDIN_FILENO, &term);
+    term.c_lflag |= (ECHO | ICANON);
+    tcsetattr(STDIN_FILENO, TCSANOW, &term);
+}
+
+/* Function to enable raw mode for reading single keypress */
+void enable_raw_mode() {
+    struct termios term;
+    tcgetattr(STDIN_FILENO, &term);
+    term.c_lflag &= ~(ECHO | ICANON);
+    tcsetattr(STDIN_FILENO, TCSANOW, &term);
+}
+
+/* Function to get a single keypress */
+char get_keypress() {
+    char c;
+    read(STDIN_FILENO, &c, 1);
+    return c;
+}
+
+/* Function to display a prompt and read a command */
+int get_command(char *command, int interactive) {
+    if (interactive) {
+        printf("#cisfun$ ");
+    }
+    fgets(command, MAX_COMMAND_LENGTH, stdin);
+    command[strcspn(command, "\n")] = 0;  /* Remove newline character */
+    return 1;
+}
 
 /* Function to execute a command with arguments */
 void execute_command(char *full_command) {
@@ -46,19 +96,18 @@ void execute_command(char *full_command) {
 }
 
 int main(void) {
-    char *command;
+    char command[MAX_COMMAND_LENGTH];
     int interactive = isatty(STDIN_FILENO);
 
-    while ((command = readline("#cisfun$ ")) != NULL) {
-        if (strlen(command) > 0) {
-            add_history(command);
-            execute_command(command);
+    while (get_command(command, interactive)) {
+        char *trimmed_command = trim_whitespace(command);
+        if (strlen(trimmed_command) > 0) {
+            execute_command(trimmed_command);
         }
-        free(command);
     }
 
     if (interactive) {
         printf("\n");
     }
-    return (0);
+    return 0;
 }
