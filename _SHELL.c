@@ -3,8 +3,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
-#include <ctype.h>
 #include <termios.h>
+#include <ctype.h>
 
 #define MAX_COMMAND_LENGTH 1024
 #define MAX_ARGS 64
@@ -13,41 +13,21 @@ extern char **environ;
 /* Function to trim leading and trailing spaces */
 char *trim_whitespace(char *str) {
     char *end;
+
+    /* Trim leading space */
     while (isspace((unsigned char)*str)) str++;
 
     if (*str == 0)  /* All spaces? */
-        return str;
+        return (str);
 
+    /* Trim trailing space */
     end = str + strlen(str) - 1;
     while (end > str && isspace((unsigned char)*end)) end--;
 
     /* Write new null terminator character */
     *(end + 1) = 0;
 
-    return str;
-}
-
-/* Function to disable input buffering and echoing */
-void disable_raw_mode() {
-    struct termios term;
-    tcgetattr(STDIN_FILENO, &term);
-    term.c_lflag |= (ECHO | ICANON);
-    tcsetattr(STDIN_FILENO, TCSANOW, &term);
-}
-
-/* Function to enable raw mode for reading single keypress */
-void enable_raw_mode() {
-    struct termios term;
-    tcgetattr(STDIN_FILENO, &term);
-    term.c_lflag &= ~(ECHO | ICANON);
-    tcsetattr(STDIN_FILENO, TCSANOW, &term);
-}
-
-/* Function to get a single keypress */
-char get_keypress() {
-    char c;
-    read(STDIN_FILENO, &c, 1);
-    return c;
+    return (str);
 }
 
 /* Function to display a prompt and read a command */
@@ -55,9 +35,11 @@ int get_command(char *command, int interactive) {
     if (interactive) {
         printf("#cisfun$ ");
     }
-    fgets(command, MAX_COMMAND_LENGTH, stdin);
+    if (fgets(command, MAX_COMMAND_LENGTH, stdin) == NULL) {
+        return (0);  /* EOF or error */
+    }
     command[strcspn(command, "\n")] = 0;  /* Remove newline character */
-    return 1;
+    return (1);
 }
 
 /* Function to execute a command with arguments */
@@ -99,6 +81,12 @@ int main(void) {
     char command[MAX_COMMAND_LENGTH];
     int interactive = isatty(STDIN_FILENO);
 
+    /* Set PATH environment variable using putenv */
+    if (getenv("PATH=/bin") != 0) {
+        perror("putenv");
+        return 1;
+    }
+
     while (get_command(command, interactive)) {
         char *trimmed_command = trim_whitespace(command);
         if (strlen(trimmed_command) > 0) {
@@ -109,5 +97,5 @@ int main(void) {
     if (interactive) {
         printf("\n");
     }
-    return 0;
+    return (0);
 }
