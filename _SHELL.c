@@ -6,7 +6,7 @@
 #include <ctype.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-
+#define MAX_COMMAND_LENGTH 1024/*NEW*/
 #define MAX_ARGS 64
 extern char **environ;
 
