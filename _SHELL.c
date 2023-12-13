@@ -44,11 +44,10 @@ int get_command(char *command, int interactive) {
 
 /* Function to execute a command with arguments */
 void execute_command(char *full_command) {
-    pid_t pid;
-    int status;
     char *argv[MAX_ARGS];
     char *token;
     int i = 0;
+    pid_t pid;  /* Declaration moved to the top of the block */
 
     /* Split the command into words */
     token = strtok(full_command, " ");
@@ -58,18 +57,22 @@ void execute_command(char *full_command) {
     }
     argv[i] = NULL;
 
-    /* Execute the command */
+    /* Fork process to execute command */
     pid = fork();
     if (pid == -1) {
         perror("fork");
-    } else if (pid == 0) {
+        return;
+    }
+
+    if (pid == 0) {
         /* Child process */
         if (execvp(argv[0], argv) == -1) {
             perror(argv[0]);
+            exit(EXIT_FAILURE);
         }
-        exit(EXIT_FAILURE);
     } else {
         /* Parent process */
+        int status;
         waitpid(pid, &status, 0);
     }
 }
@@ -96,4 +99,3 @@ int main(void) {
     }
     return (0);
 }
-
