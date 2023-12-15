@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <termios.h>
 #include <ctype.h>
 
 #define MAX_COMMAND_LENGTH 1024
@@ -17,7 +18,7 @@ char *trim_whitespace(char *str) {
     while (isspace((unsigned char)*str)) str++;
 
     if (*str == 0)  /* All spaces? */
-        return str;
+        return (str);
 
     /* Trim trailing space */
     end = str + strlen(str) - 1;
@@ -26,7 +27,7 @@ char *trim_whitespace(char *str) {
     /* Write new null terminator character */
     *(end + 1) = 0;
 
-    return str;
+    return (str);
 }
 
 /* Function to display a prompt and read a command */
@@ -35,10 +36,10 @@ int get_command(char *command, int interactive) {
         printf("#cisfun$ ");
     }
     if (fgets(command, MAX_COMMAND_LENGTH, stdin) == NULL) {
-        return 0;  /* EOF or error */
+        return (0);  /* EOF or error */
     }
     command[strcspn(command, "\n")] = 0;  /* Remove newline character */
-    return 1;
+    return (1);
 }
 
 /* Function to execute a command with arguments */
@@ -79,6 +80,12 @@ void execute_command(char *full_command) {
 int main(void) {
     char command[MAX_COMMAND_LENGTH];
     int interactive = isatty(STDIN_FILENO);
+
+    /* Set PATH environment variable using putenv */
+    if (getenv("PATH=/bin") != 0) {
+        perror("putenv");
+        return 1;
+    }
 
     while (get_command(command, interactive)) {
         char *trimmed_command = trim_whitespace(command);
