@@ -9,6 +9,7 @@
 #define MAX_ARGS 64
 extern char **environ;
 
+/* Trims leading and trailing spaces from a string */
 char *trim_whitespace(char *str) {
     char *end;
     while (isspace((unsigned char)*str)) str++;
@@ -19,6 +20,7 @@ char *trim_whitespace(char *str) {
     return str;
 }
 
+/* Displays a prompt and reads a command */
 int get_command(char *command, int interactive) {
     if (interactive) {
         printf("$ ");
@@ -30,33 +32,17 @@ int get_command(char *command, int interactive) {
     return 1;
 }
 
-/* Function to search for a command in PATH */
-char *search_in_path(char *cmd) {
-    char *path = getenv("PATH");
-    char *path_copy = strdup(path);
-    char *token = strtok(path_copy, ":");
-    char *cmd_path = malloc(MAX_COMMAND_LENGTH);
-    
-    while (token != NULL) {
-        sprintf(cmd_path, "%s/%s", token, cmd);
-        if (access(cmd_path, X_OK) == 0) {
-            free(path_copy);
-            return cmd_path;
-        }
-        token = strtok(NULL, ":");
-    }
-
-    free(path_copy);
-    free(cmd_path);
-    return NULL;
-}
-
+/* Executes a command with arguments */
 void execute_command(char *full_command) {
     char *argv[MAX_ARGS];
     char *token;
+    char *path_env;  /* Declare path_env at the start */
     int i = 0;
     pid_t pid;
     int status;
+
+    /* Initialize path_env */
+    path_env = getenv("PATH");
 
     token = strtok(full_command, " ");
     while (token != NULL && i < MAX_ARGS - 1) {
@@ -65,13 +51,9 @@ void execute_command(char *full_command) {
     }
     argv[i] = NULL;
 
-    if (strchr(argv[0], '/') == NULL) {
-        char *path_cmd = search_in_path(argv[0]);
-        if (path_cmd == NULL) {
-            fprintf(stderr, "%s: Command not found\n", argv[0]);
-            return;
-        }
-        free(path_cmd);
+    if (path_env == NULL || strlen(path_env) == 0) {
+        fprintf(stderr, "./hsh: 1: %s: not found\n", argv[0]);
+        exit(127);
     }
 
     pid = fork();
@@ -81,15 +63,19 @@ void execute_command(char *full_command) {
     }
 
     if (pid == 0) {
-        if (execvp(argv[0], argv) == -1) {
-            perror(argv[0]);
-            exit(EXIT_FAILURE);
-        }
+        execvp(argv[0], argv);
+        fprintf(stderr, "./hsh: 1: %s: not found\n", argv[0]);
+        exit(127);
     } else {
-        wait(&status);
+        waitpid(pid, &status, 0);
+        if (WIFEXITED(status)) {
+            exit(WEXITSTATUS(status));
+        }
     }
 }
 
+
+/* Main function */
 int main(void) {
     char command[MAX_COMMAND_LENGTH];
     int interactive = isatty(STDIN_FILENO);
