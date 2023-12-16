@@ -30,6 +30,27 @@ int get_command(char *command, int interactive) {
     return 1;
 }
 
+/* Function to search for a command in PATH */
+char *search_in_path(char *cmd) {
+    char *path = getenv("PATH");
+    char *path_copy = strdup(path);
+    char *token = strtok(path_copy, ":");
+    char *cmd_path = malloc(MAX_COMMAND_LENGTH);
+    
+    while (token != NULL) {
+        sprintf(cmd_path, "%s/%s", token, cmd);
+        if (access(cmd_path, X_OK) == 0) {
+            free(path_copy);
+            return cmd_path;
+        }
+        token = strtok(NULL, ":");
+    }
+
+    free(path_copy);
+    free(cmd_path);
+    return NULL;
+}
+
 void execute_command(char *full_command) {
     char *argv[MAX_ARGS];
     char *token;
@@ -44,6 +65,15 @@ void execute_command(char *full_command) {
     }
     argv[i] = NULL;
 
+    if (strchr(argv[0], '/') == NULL) {
+        char *path_cmd = search_in_path(argv[0]);
+        if (path_cmd == NULL) {
+            fprintf(stderr, "%s: Command not found\n", argv[0]);
+            return;
+        }
+        free(path_cmd);
+    }
+
     pid = fork();
     if (pid == -1) {
         perror("fork");
@@ -51,18 +81,12 @@ void execute_command(char *full_command) {
     }
 
     if (pid == 0) {
-        if (argv[0][0] == '/' || strstr(argv[0], "./") == argv[0] || strstr(argv[0], "../") == argv[0]) {
-            execv(argv[0], argv);  
-        } else {
-            execvp(argv[0], argv); 
+        if (execvp(argv[0], argv) == -1) {
+            perror(argv[0]);
+            exit(EXIT_FAILURE);
         }
-        fprintf(stderr, "./hsh: 1: %s: not found\n", argv[0]);
-        exit(127);
     } else {
-        waitpid(pid, &status, 0);
-        if (WIFEXITED(status)) {
-            exit(WEXITSTATUS(status));
-        }
+        wait(&status);
     }
 }
 
@@ -71,13 +95,9 @@ int main(void) {
     int interactive = isatty(STDIN_FILENO);
 
     while (get_command(command, interactive)) {
-        char *cmd;
-        char *rest = command;
-        while ((cmd = strtok_r(rest, "\n", &rest))) {
-            char *trimmed_command = trim_whitespace(cmd);
-            if (strlen(trimmed_command) > 0) {
-                execute_command(trimmed_command);
-            }
+        char *trimmed_command = trim_whitespace(command);
+        if (strlen(trimmed_command) > 0) {
+            execute_command(trimmed_command);
         }
     }
 
