@@ -1,0 +1,126 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+
+#define MAX_ARGS 64
+
+struct Process {
+    char command[256];
+};
+
+/* Function to free the allocated memory for arguments */
+void free_args(char **args) {
+    for (int i = 0; args[i] != NULL; i++) {
+        free(args[i]);
+    }
+    free(args);
+}
+
+/* Function to execute the 'env' command */
+void execute_env(void) {
+    extern char **environ;
+    char **env = environ;
+    while (*env != NULL) {
+        printf("%s\n", *env);
+        env++;
+    }
+}
+
+/* Function to tokenize the input into arguments */
+void tokenize_input(char *input, char **args, int *arg_count) {
+    char *token = strtok(input, " ");
+    while (token != NULL) {
+        args[*arg_count] = strdup(token);
+        (*arg_count)++;
+        token = strtok(NULL, " ");
+    }
+}
+
+/* Function to execute built-in commands */
+void execute_builtin(char **args, struct Process *processes, int *num_processes) {
+    if (strcmp(args[0], "env") == 0) {
+        execute_env();
+    } else if (strcmp(args[0], "exit") == 0) {
+        free_args(args);
+        exit(EXIT_SUCCESS);
+    } else {
+        /* Handle other built-ins or print an error */
+        printf("Unknown command: %s\n", args[0]);
+    }
+}
+
+/* Function to execute external commands */
+void execute_command(char **args, struct Process *processes, int *num_processes) {
+    pid_t pid = fork();
+    if (pid == -1) {
+        perror("fork");
+        exit(EXIT_FAILURE);
+    }
+
+    if (pid == 0) {
+        /* Child process */
+        snprintf(processes[*num_processes].command, sizeof(processes[*num_processes].command), "%s", args[0]);
+        execvp(args[0], args);
+        perror("execvp");
+        exit(EXIT_FAILURE);
+    } else {
+        /* Parent process */
+        wait(NULL);
+        (*num_processes)++;
+    }
+}
+
+int main(void) {
+    struct Process processes[256];
+    char *input = NULL;
+    size_t input_size = 0;
+
+    while (1) {
+        printf("simple_shell$ ");
+        getline(&input, &input_size, stdin);
+
+        if (input[0] == '\n') {
+            free(input);
+            continue;
+        }
+
+        /* Remove the trailing newline character */
+        input[strcspn(input, "\n")] = '\0';
+
+        char *args[MAX_ARGS];
+        int arg_count = 0;
+
+        tokenize_input(input, args, &arg_count);
+
+        if (arg_count > 0) {
+            if (strcmp(args[0], "cd") == 0) {
+                /* Handle cd command */
+                /* You can implement this part as needed */
+            } else if (arg_count == 1 && strchr(args[0], '=') != NULL) {
+                /* Handle variable assignments */
+                /* You can implement this part as needed */
+            } else {
+                /* Execute the command (either a built-in or an external command) */
+                if (arg_count > 0) {
+                    if (strcmp(args[0], "exit") == 0) {
+                        free_args(args);
+                        free(input);
+                        exit(EXIT_SUCCESS);
+                    } else {
+                        execute_command(args, processes, &num_processes);
+                    }
+                }
+            }
+        }
+
+        free_args(args);
+    }
+
+    free(input);
+
+    return 0;
+}
+
