@@ -30,15 +30,13 @@ int get_command(char *command, int interactive) {
     return 1;
 }
 
+
 void execute_command(char *full_command) {
     char *argv[MAX_ARGS];
     char *token;
-    char *path_env; /* Variable declaration */
     int i = 0;
     pid_t pid;
     int status;
-
-    path_env = getenv("PATH"); /* Initialize path_env */
 
     token = strtok(full_command, " ");
     while (token != NULL && i < MAX_ARGS - 1) {
@@ -46,11 +44,6 @@ void execute_command(char *full_command) {
         token = strtok(NULL, " ");
     }
     argv[i] = NULL;
-
-    if ((path_env == NULL || strlen(path_env) == 0) && strchr(argv[0], '/') == NULL) {
-        fprintf(stderr, "./hsh: 1: %s: not found\n", argv[0]);
-        exit(127);
-    }
 
     pid = fork();
     if (pid == -1) {
@@ -61,14 +54,19 @@ void execute_command(char *full_command) {
     if (pid == 0) {
         execvp(argv[0], argv);
         fprintf(stderr, "./hsh: 1: %s: not found\n", argv[0]);
-        exit(127); /* Exit with status 127 for command not found */
+        exit(127);
     } else {
-        wait(&status);
+        waitpid(pid, &status, 0);
         if (WIFEXITED(status)) {
-            exit(WEXITSTATUS(status));
+            if(WEXITSTATUS(status) == 127) {
+                exit(127);  
+            }
+        } else {
+            exit(127);
         }
     }
 }
+
 
 int main(void) {
     char command[MAX_COMMAND_LENGTH];
