@@ -9,7 +9,6 @@
 #define MAX_ARGS 64
 extern char **environ;
 
-/* Trims leading and trailing spaces from a string */
 char *trim_whitespace(char *str) {
     char *end;
     while (isspace((unsigned char)*str)) str++;
@@ -20,7 +19,6 @@ char *trim_whitespace(char *str) {
     return str;
 }
 
-/* Displays a prompt and reads a command */
 int get_command(char *command, int interactive) {
     if (interactive) {
         printf("$ ");
@@ -32,7 +30,6 @@ int get_command(char *command, int interactive) {
     return 1;
 }
 
-/* Executes a command with arguments */
 void execute_command(char *full_command) {
     char *argv[MAX_ARGS];
     char *token;
@@ -55,12 +52,12 @@ void execute_command(char *full_command) {
 
     if (pid == 0) {
         if (argv[0][0] == '/' || strstr(argv[0], "./") == argv[0] || strstr(argv[0], "../") == argv[0]) {
-            execv(argv[0], argv);  /* Direct execution for absolute or relative paths */
+            execv(argv[0], argv);  
         } else {
-            execvp(argv[0], argv);  /* Search in PATH for other cases */
+            execvp(argv[0], argv); 
         }
         fprintf(stderr, "./hsh: 1: %s: not found\n", argv[0]);
-        exit(127);  /* Command not found */
+        exit(127);
     } else {
         waitpid(pid, &status, 0);
         if (WIFEXITED(status)) {
@@ -69,15 +66,18 @@ void execute_command(char *full_command) {
     }
 }
 
-/* Main function */
 int main(void) {
     char command[MAX_COMMAND_LENGTH];
     int interactive = isatty(STDIN_FILENO);
 
     while (get_command(command, interactive)) {
-        char *trimmed_command = trim_whitespace(command);
-        if (strlen(trimmed_command) > 0) {
-            execute_command(trimmed_command);
+        char *cmd;
+        char *rest = command;
+        while ((cmd = strtok_r(rest, "\n", &rest))) {
+            char *trimmed_command = trim_whitespace(cmd);
+            if (strlen(trimmed_command) > 0) {
+                execute_command(trimmed_command);
+            }
         }
     }
 
