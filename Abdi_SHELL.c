@@ -36,13 +36,9 @@ int get_command(char *command, int interactive) {
 void execute_command(char *full_command) {
     char *argv[MAX_ARGS];
     char *token;
-    char *path_env;  /* Declare path_env at the start */
     int i = 0;
     pid_t pid;
     int status;
-
-    /* Initialize path_env */
-    path_env = getenv("PATH");
 
     token = strtok(full_command, " ");
     while (token != NULL && i < MAX_ARGS - 1) {
@@ -51,11 +47,6 @@ void execute_command(char *full_command) {
     }
     argv[i] = NULL;
 
-    if (path_env == NULL || strlen(path_env) == 0) {
-        fprintf(stderr, "./hsh: 1: %s: not found\n", argv[0]);
-        exit(127);
-    }
-
     pid = fork();
     if (pid == -1) {
         perror("fork");
@@ -63,9 +54,13 @@ void execute_command(char *full_command) {
     }
 
     if (pid == 0) {
-        execvp(argv[0], argv);
+        if (argv[0][0] == '/' || strstr(argv[0], "./") == argv[0] || strstr(argv[0], "../") == argv[0]) {
+            execv(argv[0], argv);  /* Direct execution for absolute or relative paths */
+        } else {
+            execvp(argv[0], argv);  /* Search in PATH for other cases */
+        }
         fprintf(stderr, "./hsh: 1: %s: not found\n", argv[0]);
-        exit(127);
+        exit(127);  /* Command not found */
     } else {
         waitpid(pid, &status, 0);
         if (WIFEXITED(status)) {
@@ -73,7 +68,6 @@ void execute_command(char *full_command) {
         }
     }
 }
-
 
 /* Main function */
 int main(void) {
