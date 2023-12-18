@@ -1,6 +1,9 @@
 /* execute_cd_command.c */
-#include "main.h"
 #include "execute_cd_command.h"
+#include <stddef.h>
+#include <stdio.h>
+#include <unistd.h>
+
 int execute_cd_command(char *dir) 
 {
     if (dir != NULL) 

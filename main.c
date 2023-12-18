@@ -38,7 +38,8 @@ struct CommandFunctions commandFunctions[] = {
     {
         NULL,
         NULL,
-        (CommandFunctionIntArg)get_command,
+        (CommandFunctionIntArg)NULL,
+
         NULL
     },
     {
