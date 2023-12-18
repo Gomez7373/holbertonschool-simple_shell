@@ -54,8 +54,9 @@ int main(void)
 {
     char *trimmed_command = "ls -l";
 
+    size_t i;
     /* Call functions in a loop */
-    for (size_t i = 0; i < sizeof(commandFunctions) / sizeof(commandFunctions[0]); ++i)
+    for (i = 0; i < sizeof(commandFunctions) / sizeof(commandFunctions[0]); ++i)
     {
         if (commandFunctions[i].voidFunctions != NULL)
         {
