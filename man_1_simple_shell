@@ -1,1 +1,80 @@
-man page
+.TH SIMPLE-SHELL 1 "December 22, 2023" "0.1" "Simple Shell User Manual"
+
+.SH NAME
+
+Simple Shel
+
+.SH SYNOPSIS:
+
+Simple Shell \- A simple UNIX command interpreter
+
+.SH DESCRIPTION:
+
+Simple Shell is a simple UNIX command interpreter designed for Holberton School.
+
+.SH OPTIONS:
+.TP
+.B -h, --help - Display help message and exit.
+
+.SH COMMANDS:
+
+.IP \(bu 2
+.B cd
+- Change the current working directory.
+
+.IP \(bu 3
+.B exit
+- Exit the shell.
+
+.IP \(bu 4
+.B env
+- Print the environment.
+
+.IP \(bu 5
+.B [COMMAND] [ARGUMENTS]...
+- Execute the specified command with arguments.
+
+.SH INTERACTIVE MODE:
+
+	When run interactively, Simple shell displays a prompt ($) and waits for user input.
+ Commands are executed as entered.
+
+.SH NON-INTERACTIVE MODE:
+
+	Simple shell can also be used in non-interactive mode by piping commands.
+	 For example: echo /bin/ls | ./simpleshell
+
+.SH ENVIRONMENT VARIABLE:
+.TP
+
+.IP \(bu 2
+.B PATH
+
+.TP
+.IP \(bu 3
+The Simple shell executable must be in a directory listed in the PATH environment variable, or the full path to the executable must be provided.
+
+.SH EXIT STATUS:
+.TP
+.B (0) = Success.
+
+.TP
+.B (127) = Command not found.
+
+.SH EXAMPLES:
+
+.IP \(bu 2
+Run the shell interactively: ./simpleshell
+
+.IP \(bu 3
+Run a command non-interactively: echo /bin/ls | ./simpleshell
+
+.SH AUTHORS:
+.TP
+Sheila Gomez
+
+.TP	
+Abdiel Gonzales
+
+.TP
+Mitzael Pitre De Jesus
