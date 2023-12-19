@@ -13,7 +13,11 @@ char **environ;
 char *trim_whitespace(char *str);
 int get_command(char *command, int interactive);
 int execute_command(char *full_command);
-
+/**
+ * main - The main function for the shell.
+ *
+ * Return: Always 0.
+ */
 int main(void)
 {
 char command[MAX_COMMAND_LENGTH];
