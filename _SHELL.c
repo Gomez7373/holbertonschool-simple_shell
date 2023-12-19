@@ -9,7 +9,7 @@
 #define MAX_ARGS 64
 
 char **environ;
-
+/*------------------------------------------------------------*/
 char *trim_whitespace(char *str)
 {
 char *end;
@@ -42,65 +42,44 @@ return (0);
 command[strcspn(command, "\n")] = 0;
 return (1);
 }
+/*------------------------------------------------------------*/
 
+/*
+* execute_command - Execute a shell command
+* @full_command: Full command string
+* @last_status: Pointer to last command's exit status
+*/
 void execute_command(char *full_command, int *last_status)
 {
+char *argv[64], *t;
+int i = 0, j, s;
+pid_t p;
 
-char *argv[MAX_ARGS];
-char *token;
-int i = 0, j;
-pid_t pid;
-int status;
+for (t = strtok(full_command, " "); t && i < 63; t = strtok(NULL, " "))
+argv[i++] = t;
 
-token = strtok(full_command, " ");
-while (token != NULL && i < MAX_ARGS - 1)
-{
-argv[i++] = token;
-token = strtok(NULL, " ");
-}
 argv[i] = NULL;
 
 if (strcmp(argv[0], "env") == 0)
-{
-j = 0;
-while (environ[j] != NULL)
-{
-printf("%s\n", environ[j]);
-j++;
-}
-*last_status = 0;
-return;
-}
-if (strcmp(argv[0], "exit") == 0)
-{
+for (j = 0; environ[j] != NULL; printf("%s\n", environ[j++]));
+else if (strcmp(argv[0], "exit") == 0)
 exit(*last_status);
-}
-
-pid = fork();
-if (pid == -1)
-{
+else if ((p = fork()) == -1)
 perror("fork");
-return;
-}
-if (pid == 0)
+else if (p == 0)
 {
-
 dup2(STDIN_FILENO, STDIN_FILENO);
 execvp(argv[0], argv);
-
 fprintf(stderr, "./hsh: 1: %s: not found\n", argv[0]);
 exit(127);
 }
 else
 {
-waitpid(pid, &status, 0);
-if (WIFEXITED(status))
-{
-*last_status = WEXITSTATUS(status);
+waitpid(p, &s, 0);
+*last_status = WIFEXITED(s) ? WEXITSTATUS(s) : *last_status;
 }
 }
-}
-
+/*------------------------------------------------------------*/
 int main(void)
 {
 char command[MAX_COMMAND_LENGTH];
