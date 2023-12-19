@@ -1,20 +1,23 @@
 /* execute_cd_command.c */
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "main.h"
-#include "execute_cd_command.h"
-int execute_cd_command(char *dir) 
+
+void execute_cd_command(char *command)
 {
-    if (dir != NULL) 
+    if (command != NULL)
     {
-        if (chdir(dir) != 0) 
+        if (chdir(command) != 0)
         {
             perror("cd");
-            return 1;  /* Return an error code*/
+            exit(EXIT_FAILURE);
         }
-        return 0;  /* Success*/
-    } 
-    else 
+    }
+    else
     {
-        fprintf(stderr, "./hsh: cd: argument missing\n");
-        return 1;  /* Return an error code*/
+        printf("No directory specified for cd command.\n");
+        return;  /* Return without exiting the program*/
     }
 }
+

@@ -1,7 +1,7 @@
 /* arrow_key_handler.c */
-#include "main.h"
+
 #include <ncurses.h>
-#include "arrow_key_handler.h"
+#include <stdio.h>
 int read_arrow_key() 
 {
     int ch;
