@@ -55,10 +55,10 @@ printf("$ ");
 }
 if (fgets(command, MAX_COMMAND_LENGTH, stdin) == NULL)
 {
-return 0;
+return (0);
 }
 command[strcspn(command, "\n")] = 0;
-return 1;
+return (1);
 }
 
 int execute_command(char *full_command)
@@ -81,7 +81,8 @@ token = strtok(NULL, " ");
 }
 argv[i] = NULL;
 
-if ((path_env == NULL || strlen(path_env) == 0) && strchr(argv[0], '/') == NULL)
+if ((path_env == NULL ||
+strlen(path_env) == 0) && strchr(argv[0], '/') == NULL)
 {
 fprintf(stderr, "./hsh: 1: %s: not found\n", argv[0]);
 exit(127);
@@ -119,7 +120,8 @@ if (pid == 0)
 execvp(argv[0], argv);
 fprintf(stderr, "./hsh: 1: %s: not found\n", argv[0]);
 exit(127);
-} else
+}
+else
 {
 wait(&status);
 }
