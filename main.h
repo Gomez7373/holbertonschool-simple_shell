@@ -1,6 +1,6 @@
-/* main.h
- * This is a header file with include guards to
- * prevent double inclusion.
+/*
+ * main.h
+ * This is a header file with include guards to prevent double inclusion.
  */
 
 #ifndef MAIN_H
