@@ -1,10 +1,10 @@
+#ifndef MAIN_H
+#define MAIN_H
+
 /*
  * main.h
  * This is a header file with include guards to prevent double inclusion.
  */
-
-#ifndef MAIN_H
-#define MAIN_H
 
 #define MAX_COMMAND_LENGTH 1024
 #define MAX_ARGS 64
