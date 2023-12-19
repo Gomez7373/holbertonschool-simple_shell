@@ -33,13 +33,9 @@ int get_command(char *command, int interactive) {
 void execute_command(char *full_command) {
     char *argv[MAX_ARGS];
     char *token;
-    char *path_env; /* Declaration moved to the top */
     int i = 0;
     pid_t pid;
     int status;
-
-    /* Initialize path_env */
-    path_env = getenv("PATH");
 
     token = strtok(full_command, " ");
     while (token != NULL && i < MAX_ARGS - 1) {
@@ -48,11 +44,12 @@ void execute_command(char *full_command) {
     }
     argv[i] = NULL;
 
-    if ((path_env == NULL || strlen(path_env) == 0) && strchr(argv[0], '/') == NULL) {
-        fprintf(stderr, "./hsh: 1: %s: not found\n", argv[0]);
-        exit(127);
+    /* Check for the 'exit' command */
+    if (strcmp(argv[0], "exit") == 0) {
+      exit(0);  /* Exit the shell */
     }
 
+    /* Rest of your existing logic for executing commands */
     pid = fork();
     if (pid == -1) {
         perror("fork");
@@ -67,6 +64,7 @@ void execute_command(char *full_command) {
         wait(&status);
     }
 }
+
 
 int main(void) {
     char command[MAX_COMMAND_LENGTH];
