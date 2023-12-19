@@ -8,6 +8,7 @@
 #define MAX_COMMAND_LENGTH 1024
 #define MAX_ARGS 64
 
+char **environ;
 
 char *trim_whitespace(char *str)
 {
