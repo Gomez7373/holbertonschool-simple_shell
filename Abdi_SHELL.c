@@ -11,11 +11,15 @@ extern char **environ;
 
 char *trim_whitespace(char *str) {
     char *end;
+    /* Trimming leading spaces */
     while (isspace((unsigned char)*str)) str++;
     if (*str == 0) return str;
+
+    /* Trimming trailing spaces */
     end = str + strlen(str) - 1;
     while (end > str && isspace((unsigned char)*end)) end--;
     *(end + 1) = 0;
+
     return str;
 }
 
@@ -33,7 +37,7 @@ int get_command(char *command, int interactive) {
 void execute_command(char *full_command, int *last_status) {
     char *argv[MAX_ARGS];
     char *token;
-    int i = 0;
+    int i = 0, j;
     pid_t pid;
     int status;
 
@@ -44,6 +48,23 @@ void execute_command(char *full_command, int *last_status) {
     }
     argv[i] = NULL;
 
+    /* Checking for the 'env' command */
+    if (strcmp(argv[0], "env") == 0) {
+        j = 0;
+        while (environ[j] != NULL) {
+            printf("%s\n", environ[j]);
+            j++;
+        }
+        *last_status = 0; /* Set last status to 0 for successful execution */
+        return; /* Return after printing environment variables */
+    }
+
+    /* Checking for the 'exit' command */
+    if (strcmp(argv[0], "exit") == 0) {
+        exit(*last_status); /* Exit the shell with the last status */
+    }
+
+    /* Remaining logic for executing other commands */
     pid = fork();
     if (pid == -1) {
         perror("fork");
@@ -70,9 +91,6 @@ int main(void) {
     while (get_command(command, interactive)) {
         char *trimmed_command = trim_whitespace(command);
         if (strlen(trimmed_command) > 0) {
-            if (strcmp(trimmed_command, "exit") == 0) {
-                exit(last_status);
-            }
             execute_command(trimmed_command, &last_status);
         }
     }
