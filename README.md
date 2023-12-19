@@ -109,7 +109,7 @@ Handle errors. You have to handle the “end of file” condition (Ctrl+D)
 
 - Implement the env built-in, that prints the current environment
 
-## Authors
+## Authors:
 
 - [Sheila Gomez](https://github.com/Gomez7373)
 - [Abdiel Feliciano](https://github.com/Abdiel-88)
