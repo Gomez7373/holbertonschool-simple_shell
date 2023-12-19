@@ -7,7 +7,7 @@
 
 #define MAX_COMMAND_LENGTH 1024
 #define MAX_ARGS 64
-extern char **environ;
+
 
 char *trim_whitespace(char *str)
 {
@@ -21,7 +21,8 @@ return (str);
 /* Trimming trailing spaces */
 end = str + strlen(str)
 - 1;
-while (end > str && isspace((unsigned char)*end)) end--;
+while (end > str && isspace((unsigned char)*end))
+end--;
 *(end + 1) = 0;
 
 return (str);
