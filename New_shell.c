@@ -13,7 +13,7 @@ char **environ;
 /**
 * trim_whitespace - Trim leading and trailing whitespaces from a string
 * @str: Input string
-* 
+*
 * Return: Trimmed string
 */
 char *trim_whitespace(char *str)
@@ -39,7 +39,7 @@ return (str);
 * get_command - Get user input for the command
 * @command: Buffer to store user input
 * @interactive: Flag indicating interactive mode
-* 
+*
 * Return: 1 if successful, 0 if there's an error
 */
 int get_command(char *command, int interactive)
@@ -81,7 +81,7 @@ else if (strcmp(argv[0], "exit") == 0)
 {
 exit(*last_status);
 }
-else if ((p = fork()) == -1)
+else if ((p == fork()) == -1)
 {
 perror("fork");
 }
@@ -101,7 +101,7 @@ waitpid(p, &s, 0);
 
 /**
 * main - Shell entry point
-* 
+*
 * Return: Last command exit status
 */
 int main(void)
