@@ -7,7 +7,7 @@
 
 #define MAX_COMMAND_LENGTH 1024
 #define MAX_ARGS 64
-extern char **environ;
+char **environ;
 
 char *trim_whitespace(char *str);
 int get_command(char *command, int interactive);
@@ -38,11 +38,17 @@ return (0);
 char *trim_whitespace(char *str)
 {
 char *end;
-while (isspace((unsigned char)*str)) str++;
+while (isspace((unsigned char)*str))
+{
+str++;
+}
 if (*str == 0)
 return (str);
 end = str + strlen(str) - 1;
-while (end > str && isspace((unsigned char)*end)) end--;
+while (end > str && isspace((unsigned char)*end))
+{       
+end--;
+}
 *(end + 1) = 0;
 return (str);
 }
@@ -97,7 +103,7 @@ while (*env_var != NULL)
 printf("%s\n", *env_var);
 env_var++;
 }
-return 1; /* Continue the shell */
+return (1); /* Continue the shell */
 }
 
 /* Check for the exit built-in */
