@@ -1,11 +1,15 @@
-/* main.h*/
-#ifndef MAIN_H
-#define MAIN_H
+/* shell.h */
+#ifndef SHELL_H
+#define SHELL_H
 
-extern void execute_cd_command(char *command);
-void get_command(char *command);
-extern void read_arrow_key(char *command);
-extern char *trim_whitespace(char *command);
+#define MAX_COMMAND_LENGTH 1024
+#define MAX_ARGS 64
 
-#endif
+extern char **environ;
+
+char *trim_whitespace(char *str);
+int get_command(char *command, int interactive);
+void execute_command(char *full_command);
+
+#endif /* SHELL_H */
 
