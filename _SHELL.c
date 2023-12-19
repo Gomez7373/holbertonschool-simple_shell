@@ -84,11 +84,11 @@ return;
 }
 if (pid == 0)
 {
-dup2(STDOUT_FILENO, STDOUT_FILENO);
-dup2(STDERR_FILENO, STDERR_FILENO);
+
+dup2(STDIN_FILENO, STDIN_FILENO);
 execvp(argv[0], argv);
 
-dprintf(STDERR_FILENO, "./hsh: 1: %s: not found\n", argv[0]);
+fprintf(stderr, "./hsh: 1: %s: not found\n", argv[0]);
 exit(127);
 }
 else
