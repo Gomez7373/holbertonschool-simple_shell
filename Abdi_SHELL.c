@@ -30,7 +30,7 @@ int get_command(char *command, int interactive) {
     return 1;
 }
 
-void execute_command(char *full_command) {
+void execute_command(char *full_command, int *last_status) {
     char *argv[MAX_ARGS];
     char *token;
     int i = 0;
@@ -44,12 +44,6 @@ void execute_command(char *full_command) {
     }
     argv[i] = NULL;
 
-    /* Check for the 'exit' command */
-    if (strcmp(argv[0], "exit") == 0) {
-      exit(0);  /* Exit the shell */
-    }
-
-    /* Rest of your existing logic for executing commands */
     pid = fork();
     if (pid == -1) {
         perror("fork");
@@ -61,24 +55,30 @@ void execute_command(char *full_command) {
         fprintf(stderr, "./hsh: 1: %s: not found\n", argv[0]);
         exit(127);
     } else {
-        wait(&status);
+        waitpid(pid, &status, 0);
+        if (WIFEXITED(status)) {
+            *last_status = WEXITSTATUS(status);
+        }
     }
 }
-
 
 int main(void) {
     char command[MAX_COMMAND_LENGTH];
     int interactive = isatty(STDIN_FILENO);
+    int last_status = 0;
 
     while (get_command(command, interactive)) {
         char *trimmed_command = trim_whitespace(command);
         if (strlen(trimmed_command) > 0) {
-            execute_command(trimmed_command);
+            if (strcmp(trimmed_command, "exit") == 0) {
+                exit(last_status);
+            }
+            execute_command(trimmed_command, &last_status);
         }
     }
 
     if (interactive) {
         printf("\n");
     }
-    return 0;
+    return last_status;
 }
