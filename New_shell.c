@@ -64,7 +64,7 @@ void execute_command(char *full_command, int *last_status)
 {
 char *argv[MAX_ARGS], *t;
 int i = 0, j, s;
-pid_t p;
+pid_t p = -1;
 
 for (t = strtok(full_command, " ");
 t && i < MAX_ARGS - 1; t = strtok(NULL, " "))
