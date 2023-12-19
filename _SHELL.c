@@ -7,6 +7,7 @@
 
 #define MAX_COMMAND_LENGTH 1024
 #define MAX_ARGS 64
+
 char **environ;
 
 char *trim_whitespace(char *str);
@@ -35,6 +36,12 @@ printf("\n");
 return (0);
 }
 
+/**
+ * trim_whitespace - Removes leading and trailing whitespaces from a string.
+ * @str: The input string.
+ *
+ * Return: A pointer to the trimmed string.
+ */
 char *trim_whitespace(char *str)
 {
 char *end;
@@ -53,6 +60,13 @@ end--;
 return (str);
 }
 
+/**
+ * get_command - Gets a command from the user.
+ * @command: Buffer to store the command.
+ * @interactive: Flag indicating interactive mode.
+ *
+ * Return: 1 on success, 0 on failure.
+ */
 int get_command(char *command, int interactive)
 {
 if (interactive)
@@ -67,6 +81,12 @@ command[strcspn(command, "\n")] = 0;
 return (1);
 }
 
+/**
+ * execute_command - Executes a command in a separate process.
+ * @full_command: The full command to be executed.
+ *
+ * Return: 1 to continue the shell, 0 to exit.
+ */
 int execute_command(char *full_command)
 {
 char *argv[MAX_ARGS];
