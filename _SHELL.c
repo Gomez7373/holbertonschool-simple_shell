@@ -13,12 +13,14 @@ char *trim_whitespace(char *str)
 {
 char *end;
 /* Trimming leading spaces */
-while (isspace((unsigned char)*str)) str++;
+while (isspace((unsigned char)*str))
+str++;
 if (*str == 0)
 return (str);
 
 /* Trimming trailing spaces */
-end = str + strlen(str) - 1;
+end = str + strlen(str)
+- 1;
 while (end > str && isspace((unsigned char)*end)) end--;
 *(end + 1) = 0;
 
@@ -35,8 +37,8 @@ if (fgets(command, MAX_COMMAND_LENGTH, stdin) == NULL)
 {
 return (0);
 }
-    command[strcspn(command, "\n")] = 0;
-    return (1);
+command[strcspn(command, "\n")] = 0;
+return (1);
 }
 
 void execute_command(char *full_command, int *last_status)
@@ -67,9 +69,9 @@ j++;
 *last_status = 0; /* Set last status to 0 for successful execution */
 return; /* Return after printing environment variables */
 }
-
 /* Checking for the 'exit' command */
-if (strcmp(argv[0], "exit") == 0) {
+if (strcmp(argv[0], "exit") == 0)
+{
 exit(*last_status); /* Exit the shell with the last status */
 }
 
@@ -80,7 +82,6 @@ if (pid == -1)
 perror("fork");
 return;
 }
-
 if (pid == 0)
 {
 dup2(STDOUT_FILENO, STDOUT_FILENO);
