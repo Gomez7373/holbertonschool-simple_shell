@@ -64,7 +64,7 @@ void execute_command(char *full_command, int *last_status)
 {
 char *argv[MAX_ARGS], *t;
 int i = 0, j, s;
-pid_t p;
+pid_t p = -1;
 
 for (t = strtok(full_command, " ");
 t && i < MAX_ARGS - 1; t = strtok(NULL, " "))
@@ -81,7 +81,7 @@ else if (strcmp(argv[0], "exit") == 0)
 {
 exit(*last_status);
 }
-else if ((p = fork()) == -1)
+else if ((p == fork()) == -1)
 {
 perror("fork");
 }
