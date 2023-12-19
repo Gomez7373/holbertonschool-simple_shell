@@ -1,6 +1,12 @@
-/* main.c */
+/*execude_command.c  */
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include "main.h"
-#include "execute_command.h"
+
 void execute_command(char *full_command) 
 {
     char *argv[MAX_ARGS];
@@ -24,7 +30,7 @@ void execute_command(char *full_command)
     if (strcmp(argv[0], "cd") == 0) 
     {
         /* Handle "cd" separately */
-        execute_cd_command(argv[1]);
+        execute_command(argv[1]);
     } 
     else 
     {

@@ -1,16 +1,21 @@
+/* main.c*/
 #include <stdio.h>
-
-/* Define function pointer type */
-typedef void (*CommandFunctionVoid)(char *);
-typedef int (*CommandFunctionInt)(char *);
-typedef int (*CommandFunctionIntArg)(char *, int);
-typedef char *(*CommandFunctionCharPtr)(char *);
+#include "execute_cd_command.h"
+#include "get_command.h"
+#include "read_arrow_key.h"
+#include "trim_whitespace.h"
 
 /* Function prototypes */
 void execute_cd_command(char *command);
 int arrow_key_handler(char *command);
 int get_command(char *command);
 char *trim_whitespace(char *command);
+
+/* Define function pointer type */
+typedef void (*CommandFunctionVoid)(char *);
+typedef int (*CommandFunctionInt)(char *);
+typedef int (*CommandFunctionIntArg)(char *, int);
+typedef char *(*CommandFunctionCharPtr)(char *);
 
 /* Define a struct for function pointers */
 struct CommandFunctions
@@ -39,7 +44,6 @@ struct CommandFunctions commandFunctions[] = {
         NULL,
         NULL,
         (CommandFunctionIntArg)NULL,
-
         NULL
     },
     {
@@ -48,9 +52,9 @@ struct CommandFunctions commandFunctions[] = {
         NULL,
         trim_whitespace
     }
-    /* Add more functions as needed */
 };
 
+/* main function */
 int main(void)
 {
     char *trimmed_command = "ls -l";

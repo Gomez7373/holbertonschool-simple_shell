@@ -1,19 +1,24 @@
-#include "main.h"
-#include "trim_whitespace.h"
-char *trim_whitespace(char *str) {
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+char *trim_whitespace(char *str)
+{
     char *end;
 
-    while (isspace((unsigned char)*str)) {
+    while (isspace((unsigned char)*str))
+    {
         str++;
     }
 
-    if (*str == 0) {
+    if (*str == 0)
+    {
         return str;
     }
 
     end = str + strlen(str) - 1;
 
-    while (end > str && isspace((unsigned char)*end)) {
+    while (end > str && isspace((unsigned char)*end))
+    {
         end--;
     }
 
