@@ -11,5 +11,5 @@ char *trim_whitespace(char *str);
 int get_command(char *command, int interactive);
 void execute_command(char *full_command);
 
-#endif /*MAIN_H */
+#endif /* MAIN_H */
 
