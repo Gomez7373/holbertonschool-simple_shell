@@ -14,6 +14,7 @@ char **environ;
 * get_command - Get user input for the command.
 *
 * @command: Buffer to store user input
+*
 * @interactive: Flag indicating interactive mode
 *
 * Returns: 1 if successful, 0 otherwise
