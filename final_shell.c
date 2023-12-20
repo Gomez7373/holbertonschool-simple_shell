@@ -10,54 +10,52 @@
 
 char **environ;
 
-/**
-* trim_whitespace - Trim leading and trailing whitespaces from a string
-* @str: Input string
-*
-* Return: Trimmed string
-*/
-char *trim_whitespace(char *str)
-{
-char *end;
-
-while (isspace((unsigned char)*str))
-str++;
-
-if (*str == 0)
-return (str);
-
-end = str + strlen(str) - 1;
-while (end > str && isspace((unsigned char)*end))
-end--;
-
-*(end + 1) = 0;
-
-return (str);
-}
-
-/**
-* get_command - Get user input for the command
-* @command: Buffer to store user input
-* @interactive: Flag indicating interactive mode
-*
-* Return: 1 if successful, 0 if there's an error
-*/
+/*
+ * get_command - Get user input for the command
+ * @command: Buffer to store user input
+ * @interactive: Flag indicating interactive mode
+ */
 int get_command(char *command, int interactive)
 {
-if (interactive)
+    if (interactive)
+    {
+        printf("$ ");
+        fflush(stdout);
+    }
+
+    if (fgets(command, MAX_COMMAND_LENGTH, stdin) == NULL)
+        return 0;
+
+    command[strcspn(command, "\n")] = 0;
+
+    return 1;
+}
+
+/**
+ * trim_whitespace - Trim leading and trailing whitespaces from a string
+ * @str: Input string
+ *
+ * Return: Trimmed string
+ */
+char *trim_whitespace(char *str)
 {
-printf("$ ");
-fflush(stdout);
+    char *end;
+
+    while (isspace((unsigned char)*str))
+        str++;
+
+    if (*str == 0)
+        return str;
+
+    end = str + strlen(str) - 1;
+    while (end > str && isspace((unsigned char)*end))
+        end--;
+
+    *(end + 1) = 0;
+
+    return str;
 }
 
-if (fgets(command, MAX_COMMAND_LENGTH, stdin) == NULL)
-return (0);
-
-command[strcspn(command, "\n")] = 0;
-
-return (1);
-}
-/*----------------------------------------------------------------------*/
 /**
  * execute_env - Execute the "env" built-in
  */
@@ -117,36 +115,35 @@ void execute_command(char *full_command, int *last_status)
     }
 }
 
-/*------------------------------------------------------------------*/
 /**
-* main - Shell entry point
-*
-* Return: Last command exit status
-*/
+ * main - Shell entry point
+ *
+ * Return: Last command exit status
+ */
 int main(void)
 {
-char command[MAX_COMMAND_LENGTH];
-int interactive = isatty(STDIN_FILENO);
-int last_status = 0;
+    char command[MAX_COMMAND_LENGTH];
+    int interactive = isatty(STDIN_FILENO);
+    int last_status = 0;
 
-while (get_command(command, interactive))
-{
-char *trimmed_command = trim_whitespace(command);
-if (strlen(trimmed_command) > 0)
-{
-execute_command(trimmed_command, &last_status);
-}
+    while (get_command(command, interactive))
+    {
+        char *trimmed_command = trim_whitespace(command);
+        if (strlen(trimmed_command) > 0)
+        {
+            execute_command(trimmed_command, &last_status);
+        }
 
-if (interactive)
-{
-	printf("$ ");
-	fflush(stdout);
-}
-}
+        if (interactive)
+        {
+            printf("$ ");
+            fflush(stdout);
+        }
+    }
 
-if (interactive)
-printf("\n");
+    if (interactive)
+        printf("\n");
 
-return (last_status);
+    return last_status;
 }
 
