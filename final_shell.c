@@ -11,13 +11,14 @@
 char **environ;
 
 /*
- * get_command - Get user input for the command.
- *
- * @command: Buffer to store user input
- * @interactive: Flag indicating interactive mode
- *
- * Returns: 1 if successful, 0 otherwise
- */
+* get_command - Get user input for the command.
+*
+* @command: Buffer to store user input
+* @interactive: Flag indicating interactive mode
+*
+* Returns: 1 if successful, 0 otherwise
+*/
+
 int get_command(char *command, int interactive)
 {
 if (interactive)
@@ -33,7 +34,7 @@ command[strcspn(command, "\n")] = 0;
 
 return 1;
 }
-
+/*-----------------------------------------------------------------*/
 /**
 * trim_whitespace - Trim leading and trailing whitespaces from a string
 * @str: Input string
