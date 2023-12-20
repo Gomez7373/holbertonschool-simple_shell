@@ -29,7 +29,7 @@ fflush(stdout);
 }
 
 if (fgets(command, MAX_COMMAND_LENGTH, stdin) == NULL)
-return(0);
+return (0);
 
 command[strcspn(command, "\n")] = 0;
 
@@ -50,7 +50,7 @@ while (isspace((unsigned char)*str))
 str++;
 
 if (*str == 0)
-return str;
+return (str);
 
 end = str + strlen(str) - 1;
 while (end > str && isspace((unsigned char)*end))
@@ -98,7 +98,8 @@ char *argv[MAX_ARGS], *t;
 int i = 0, s;
 pid_t p;
 
-for (t = strtok(full_command, " "); t && i < MAX_ARGS - 1; t = strtok(NULL, " "))
+for (t = strtok(full_command, " ");
+t && i < MAX_ARGS - 1; t = strtok(NULL, " "))
 argv[i++] = t;
 
 argv[i] = NULL;
