@@ -83,7 +83,7 @@ else if (strcmp(argv[0], "exit") == 0)
 {
 exit(*last_status);
 }
-else if ((fork()) == -1)
+else if ((p = fork()) == -1)
 {
 perror("fork");
 exit(1);
@@ -111,6 +111,12 @@ int main(void)
 char command[MAX_COMMAND_LENGTH];
 int interactive = isatty(STDIN_FILENO);
 int last_status = 0;
+
+if (isatty(STDIN_FILENO))
+{
+	printf("$ ");
+	fflush(stdout);
+}
 
 while (get_command(command, interactive))
 {
