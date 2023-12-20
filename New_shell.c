@@ -66,7 +66,7 @@ char *argv[MAX_ARGS], *t;
 int i = 0, j, s;
 
 pid_t p;
-p = fork();
+
 
 for (t = strtok(full_command, " ");
 t && i < MAX_ARGS - 1; t = strtok(NULL, " "))
