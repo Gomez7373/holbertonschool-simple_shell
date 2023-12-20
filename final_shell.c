@@ -64,7 +64,7 @@ void execute_command(char *full_command, int *last_status)
 {
 char *argv[MAX_ARGS], *t;
 int i = 0, j, s;
-pid_t p = -1;
+pid_t p;
 
 for (t = strtok(full_command, " ");
 t && i < MAX_ARGS - 1; t = strtok(NULL, " "))
@@ -88,10 +88,10 @@ if (p == -1)
 else if ((p = fork()) == -1)
 {
 perror("fork");
+exit(1);
 }
 else if (p == 0)
 {
-dup2(STDIN_FILENO, STDIN_FILENO);
 execvp(argv[0], argv);
 fprintf(stderr, "./hsh: 1: %s: not found\n", argv[0]);
 exit(127);
@@ -114,12 +114,23 @@ char command[MAX_COMMAND_LENGTH];
 int interactive = isatty(STDIN_FILENO);
 int last_status = 0;
 
+if (isatty(STDIN_FILENO))
+{
+	printf("$ ");
+	fflush(stdout);
+}
 while (get_command(command, interactive))
 {
 char *trimmed_command = trim_whitespace(command);
 if (strlen(trimmed_command) > 0)
 {
 execute_command(trimmed_command, &last_status);
+}
+
+if (isatty(STDIN_FILENO))
+{
+	printf("$ ");
+	fflush(stdout);
 }
 }
 
