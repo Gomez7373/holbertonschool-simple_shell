@@ -61,14 +61,20 @@ char *trim_whitespace(char *str)
  */
 void execute_env(void)
 {
-    char **env_ptr = environ;
+    char **env_ptr;
+
+    if (environ == NULL) {
+        fprintf(stderr, "Error: environ is not properly set.\n");
+        exit(1);
+    }
+
+    env_ptr = environ;
     while (*env_ptr != NULL)
     {
         printf("%s\n", *env_ptr);
         env_ptr++;
     }
 }
-
 /**
  * execute_command - Execute a shell command
  * @full_command: Full command string
