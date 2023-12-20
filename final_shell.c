@@ -57,55 +57,68 @@ command[strcspn(command, "\n")] = 0;
 
 return (1);
 }
+/*----------------------------------------------------------------------*/
+/**
+ * execute_env - Execute the "env" built-in
+ */
+void execute_env(void)
+{
+    char **env_ptr = environ;
+    while (*env_ptr != NULL)
+    {
+        printf("%s\n", *env_ptr);
+        env_ptr++;
+    }
+}
 
 /**
-* execute_command - Execute a shell command
-* @full_command: Full command string
-* @last_status: Pointer to last command's exit status
-*/
+ * execute_command - Execute a shell command
+ * @full_command: Full command string
+ * @last_status: Pointer to the last command's exit status
+ */
 void execute_command(char *full_command, int *last_status)
 {
-char *argv[MAX_ARGS], *t;
-int i = 0, j, s;
-pid_t p;
+    char *argv[MAX_ARGS], *t;
+    int i = 0, j, s;
+    pid_t p;
 
-for (t = strtok(full_command, " ");
-t && i < MAX_ARGS - 1; t = strtok(NULL, " "))
-argv[i++] = t;
+    for (t = strtok(full_command, " "); t && i < MAX_ARGS - 1; t = strtok(NULL, " "))
+        argv[i++] = t;
 
-argv[i] = NULL;
+    argv[i] = NULL;
 
-if (strcmp(argv[0], "env") == 0)
-{
-for (j = 0; environ[j] != NULL;)
-printf("%s\n", environ[j++]);
-}
-else if (strcmp(argv[0], "exit") == 0)
-{
-exit(*last_status);
-}
-else
-{
-p = fork();
-if (p == -1)
-{
-perror("fork");
-exit(1);
-}
-else if (p == 0)
-{
-execvp(argv[0], argv);
-fprintf(stderr, "./hsh: 1: %s: not found\n", argv[0]);
-exit(127);
-}
-else
-{
-waitpid(p, &s, 0);
-*last_status = WIFEXITED(s) ? WEXITSTATUS(s) : *last_status;
-}
-}
+    if (strcmp(argv[0], "env") == 0)
+    {
+        execute_env();
+    }
+    else if (strcmp(argv[0], "exit") == 0)
+    {
+        exit(*last_status);
+    }
+    else
+    {
+        p = fork();
+        if (p == -1)
+        {
+            perror("fork");
+            exit(1);
+        }
+        else if (p == 0)
+        {
+            execvp(argv[0], argv);
+            fprintf(stderr, "./hsh: 1: %s: not found\n", argv[0]);
+            exit(127);
+        }
+        else
+        {
+            waitpid(p, &s, 0);
+            *last_status = WIFEXITED(s) ? WEXITSTATUS(s) : *last_status;
+        }
+    }
 }
 
+}
+/*------------------------------------------------------------------*/
 /**
 * main - Shell entry point
 *
@@ -137,3 +150,4 @@ printf("\n");
 
 return (last_status);
 }
+
