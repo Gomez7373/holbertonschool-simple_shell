@@ -14,7 +14,7 @@ extern char **environ;
 char *trim_whitespace(char *str);
 int get_command(char *command, int interactive);
 void execute_command(char *full_command, int *last status);
-void execute_env(void);/*added this to work the environment*/
-
+void execute_env(char **envp)
+{
 #endif /* MAIN_H */
 

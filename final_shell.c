@@ -59,22 +59,25 @@ char *trim_whitespace(char *str)
 /**
  * execute_env - Execute the "env" built-in
  */
-void execute_env(void)
+void execute_env(char **envp)
 {
     char **env_ptr;
 
-    if (environ == NULL) {
-        fprintf(stderr, "Error: environ is not properly set.\n");
+    if (envp == NULL) {
+        fprintf(stderr, "Error: Environment is not properly set.\n");
         exit(1);
     }
 
-    env_ptr = environ;
+    env_ptr = envp;
     while (*env_ptr != NULL)
     {
         printf("%s\n", *env_ptr);
         env_ptr++;
     }
 }
+
+/*------------------------------------------------------------------*/
+
 /**
  * execute_command - Execute a shell command
  * @full_command: Full command string
@@ -93,7 +96,7 @@ void execute_command(char *full_command, int *last_status)
 
     if (strcmp(argv[0], "env") == 0)
     {
-        execute_env();
+        execute_env(environ);  /* Pass the environment to execute_env*/
     }
     else if (strcmp(argv[0], "exit") == 0)
     {
@@ -120,6 +123,10 @@ void execute_command(char *full_command, int *last_status)
         }
     }
 }
+
+
+/*---------------------------------------------------*/
+
 
 /**
  * main - Shell entry point
