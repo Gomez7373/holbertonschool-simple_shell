@@ -139,6 +139,10 @@ int main(void)
     int interactive = isatty(STDIN_FILENO);
     int last_status = 0;
 
+
+    char *test_env[] = {"SHLVL=0", "HBTN=Holberton", NULL};
+    environ = test_env;
+
     while (get_command(command, interactive))
     {
         char *trimmed_command = trim_whitespace(command);
@@ -159,4 +163,3 @@ int main(void)
 
     return last_status;
 }
-
