@@ -93,8 +93,27 @@ else if (strcmp(argv[0], "exit") == 0)
 {
 exit(*last_status);
 }
+
 else
 {
+<<<<<<< HEAD:New_shell
+=======
+p = fork();
+if (p == -1)
+
+{
+perror("fork");
+exit(1);
+}
+}
+
+{
+perror("fork");
+exit(1);
+}
+else if (p == 0)
+{
+>>>>>>> 30e8b9f680e3520cf2fd383b8efd0470b754cf56:New_shell.c
 execvp(argv[0], argv);
 fprintf(stderr, "./hsh: 1: %s: not found\n", argv[0]);
 exit(127);
@@ -104,6 +123,7 @@ else
 {
 waitpid(p, &s, 0);
 *last_status = WIFEXITED(s) ? WEXITSTATUS(s) : *last_status;
+}
 }
 }
 
@@ -119,6 +139,12 @@ int main(void)
 char command[MAX_COMMAND_LENGTH];
 int interactive = isatty(STDIN_FILENO);
 int last_status = 0;
+
+if (isatty(STDIN_FILENO))
+{
+	printf("$ ");
+	fflush(stdout);
+}
 
 while (get_command(command, interactive))
 {
