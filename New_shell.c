@@ -60,6 +60,7 @@ return (1);
 * @full_command: Full command string
 * @last_status: Pointer to last command's exit status
 */
+
 void execute_command(char *full_command, int *last_status)
 {
 char *argv[MAX_ARGS], *t;
@@ -67,7 +68,16 @@ int i = 0, j, s;
 
 pid_t p;
 
+p = fork();
 
+if (p == -1)
+{
+perror("fork");
+exit(1);
+}
+
+if (p == 0)
+{
 for (t = strtok(full_command, " ");
 t && i < MAX_ARGS - 1; t = strtok(NULL, " "))
 argv[i++] = t;
@@ -85,22 +95,10 @@ exit(*last_status);
 }
 else
 {
-p = fork();
-if (p == -1)
-{
-perror("fork");
-exit(1);
-}
-}
-{
-perror("fork");
-exit(1);
-}
-else if (p == 0)
-{
 execvp(argv[0], argv);
 fprintf(stderr, "./hsh: 1: %s: not found\n", argv[0]);
 exit(127);
+}
 }
 else
 {
@@ -108,6 +106,8 @@ waitpid(p, &s, 0);
 *last_status = WIFEXITED(s) ? WEXITSTATUS(s) : *last_status;
 }
 }
+
+
 
 /**
 * main - Shell entry point
