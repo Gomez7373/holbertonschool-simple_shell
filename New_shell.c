@@ -64,8 +64,14 @@ void execute_command(char *full_command, int *last_status)
 {
 char *argv[MAX_ARGS], *t;
 int i = 0, j, s;
+
 pid_t p;
+<<<<<<< HEAD
 p = fork();
+=======
+p = fork;
+
+>>>>>>> 94851c70d8e2f50eafaea2c1cf1cfe08d1c795b3
 for (t = strtok(full_command, " ");
 t && i < MAX_ARGS - 1; t = strtok(NULL, " "))
 argv[i++] = t;
@@ -84,10 +90,10 @@ exit(*last_status);
 else if ((fork()) == -1)
 {
 perror("fork");
+exit(1);
 }
 else if (p == 0)
 {
-dup2(STDIN_FILENO, STDIN_FILENO);
 execvp(argv[0], argv);
 fprintf(stderr, "./hsh: 1: %s: not found\n", argv[0]);
 exit(127);
