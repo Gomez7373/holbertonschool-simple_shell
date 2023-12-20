@@ -83,7 +83,7 @@ else if (strcmp(argv[0], "exit") == 0)
 {
 exit(*last_status);
 }
-else if ((fork()) == -1)
+else if (p = (fork()) == -1)
 {
 perror("fork");
 exit(1);
