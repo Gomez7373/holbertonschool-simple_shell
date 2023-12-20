@@ -14,7 +14,6 @@ extern char **environ;
 char *trim_whitespace(char *str);
 int get_command(char *command, int interactive);
 void execute_command(char *full_command, int *last status);
-void execute_piped_commands(char *command1, char *command2, int *last status);
 
 #endif /* MAIN_H */
 
