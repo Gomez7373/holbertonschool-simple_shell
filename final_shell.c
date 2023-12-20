@@ -45,6 +45,7 @@ return (str);
 int get_command(char *command, int interactive)
 {
 if (interactive)
+{
 printf("$ ");
 fflush(stdout);
 }
