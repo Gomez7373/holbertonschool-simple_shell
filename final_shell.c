@@ -133,27 +133,15 @@ void execute_command(char *full_command, int *last_status)
  *
  * Return: Last command exit status
  */
+
 int main(void)
-	{
+{
     char command[MAX_COMMAND_LENGTH];
     int interactive = isatty(STDIN_FILENO);
     int last_status = 0;
 
-
-    char *test_env[] = {
-        "LANGUAGE=en_US:en",
-        "HOSTNAME=8edce16a7755",
-        "SHLVL=1",
-        "HOME=/root",
-        "OLDPWD=/",
-        "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
-        "LANG=en_US.UTF-8",
-        "PWD=/tmp/correction/7138169373448671971494416513678947404275_5/2174/7373",
-        "LC_ALL=en_US.UTF-8",
-        "TZ=America/Los_Angeles",
-        NULL
-    };
-
+  
+    char *test_env[] = {"SHLVL=0", "HBTN=Holberton", NULL};
     environ = test_env;
 
     while (get_command(command, interactive))
@@ -176,3 +164,4 @@ int main(void)
 
     return last_status;
 }
+
