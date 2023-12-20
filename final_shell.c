@@ -29,11 +29,11 @@ fflush(stdout);
 }
 
 if (fgets(command, MAX_COMMAND_LENGTH, stdin) == NULL)
-return 0;
+return(0);
 
 command[strcspn(command, "\n")] = 0;
 
-return 1;
+return (1);
 }
 /*-----------------------------------------------------------------*/
 /**
@@ -58,7 +58,7 @@ end--;
 
 *(end + 1) = 0;
 
-return str;
+return (str);
 }
 /*------------------------------------------------------------------*/
 /**
@@ -171,6 +171,6 @@ fflush(stdout);
 if (interactive)
 printf("\n");
 
-return last_status;
+return (last_status);
 }
 
