@@ -11,13 +11,13 @@
 char **environ;
 
 /*
-*
-* get_command - Get user input for the command.
-*
-* @command: Buffer to store user input
-* @interactive: Flag indicating interactive mode
-*/
-
+ * get_command - Get user input for the command.
+ *
+ * @command: Buffer to store user input
+ * @interactive: Flag indicating interactive mode
+ *
+ * Returns: 1 if successful, 0 otherwise
+ */
 int get_command(char *command, int interactive)
 {
 if (interactive)
@@ -60,8 +60,11 @@ return str;
 }
 /*------------------------------------------------------------------*/
 /**
-* execute_env - Execute the "env" built-in
-*/
+ * execute_env - Execute the "env" built-in
+ *
+ * @envp: Pointer to the environment variables array
+ */
+
 void execute_env(char **envp)
 {
 char **env_ptr;
