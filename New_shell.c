@@ -83,7 +83,14 @@ else if (strcmp(argv[0], "exit") == 0)
 {
 exit(*last_status);
 }
+<<<<<<< HEAD
 else if ((p = fork()) == -1)
+=======
+else
+{
+p = fork();
+if (p == -1)
+>>>>>>> Mitzael
 {
 perror("fork");
 exit(1);
@@ -100,6 +107,7 @@ waitpid(p, &s, 0);
 *last_status = WIFEXITED(s) ? WEXITSTATUS(s) : *last_status;
 }
 }
+}
 
 /**
 * main - Shell entry point
@@ -111,6 +119,12 @@ int main(void)
 char command[MAX_COMMAND_LENGTH];
 int interactive = isatty(STDIN_FILENO);
 int last_status = 0;
+
+if (isatty(STDIN_FILENO))
+{
+	printf("$ ");
+	fflush(stdout);
+}
 
 while (get_command(command, interactive))
 {
