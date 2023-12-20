@@ -12,12 +12,15 @@ char **environ;
 
 /**
  * get_command - Get user input for the command.
+ *
  * @command: Buffer to store user input.
  * @interactive: Flag indicating interactive mode.
  *
  * Description: If interactive mode is set, prompts the user with "$ ".
  * Reads user input from stdin into the provided buffer. Removes newline
  * character if present. Returns 1 if successful, 0 otherwise.
+ *
+ * Return: 1 if successful, 0 otherwise.
  */
 int get_command(char *command, int interactive)
 {
