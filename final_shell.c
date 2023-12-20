@@ -77,8 +77,8 @@ argv[i] = NULL;
 
 if (strcmp(argv[0], "env") == 0)
 {
-for (j = 0; environ[j] != NULL;)
-printf("%s\n", environ[j++]);
+for (j = 0; environ[j] != NULL; j++)
+printf("%s\n", environ[j]);
 }
 else if (strcmp(argv[0], "exit") == 0)
 {
