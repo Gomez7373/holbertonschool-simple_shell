@@ -65,30 +65,20 @@ return (1);
 */
 void execute_command(char *full_command, int *last_status)
 {
-char *argv[MAX_ARGS];
-char *token;
-int i = 0, s;
-pid_t pid;
+char *argv[MAX_ARGS], *t;
+int i = 0, j, s;
+pid_t p;
 
-token = strtok(full_command, " ");
-while (token != NULL && i < MAX_ARGS - 1)
-{
-argv[i++] = token;
-token = strtok(NULL, " ");
-}
+for (t = strtok(full_command, " ");
+t && i < MAX_ARGS - 1; t = strtok(NULL, " "))
+argv[i++] = t;
+
 argv[i] = NULL;
 
-if (argv[0] != NULL)
-{
 if (strcmp(argv[0], "env") == 0)
 {
-if (environ != NULL)
-{
-for (i = 0; environ[i] != NULL; i++)
-{
-printf("%s\n", environ[i]);
-}
-}
+for (j = 0; environ[j] != NULL;)
+printf("%s\n", environ[j++]);
 }
 else if (strcmp(argv[0], "exit") == 0)
 {
@@ -96,26 +86,22 @@ exit(*last_status);
 }
 else
 {
-pid = fork();
-if (pid == -1)
+p = fork();
+if (p == -1)
 {
 perror("fork");
-exit(EXIT_FAILURE);
+exit(1);
 }
-else if (pid == 0)
+else if (p == 0)
 {
 execvp(argv[0], argv);
 fprintf(stderr, "./hsh: 1: %s: not found\n", argv[0]);
-exit(EXIT_FAILURE);
+exit(127);
 }
 else
 {
-waitpid(pid, &s, 0);
-if (WIFEXITED(s))
-{
-*last_status = WEXITSTATUS(s);
-}
-}
+waitpid(p, &s, 0);
+*last_status = WIFEXITED(s) ? WEXITSTATUS(s) : *last_status;
 }
 }
 }
