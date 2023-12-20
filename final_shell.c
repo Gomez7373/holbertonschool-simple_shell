@@ -46,6 +46,8 @@ int get_command(char *command, int interactive)
 {
 if (interactive)
 printf("$ ");
+fflush(stdout);
+}
 
 if (fgets(command, MAX_COMMAND_LENGTH, stdin) == NULL)
 return (0);
@@ -85,7 +87,6 @@ else
 {
 p = fork();
 if (p == -1)
-else if ((p = fork()) == -1)
 {
 perror("fork");
 exit(1);
@@ -102,6 +103,7 @@ waitpid(p, &s, 0);
 *last_status = WIFEXITED(s) ? WEXITSTATUS(s) : *last_status;
 }
 }
+}
 
 /**
 * main - Shell entry point
@@ -114,11 +116,6 @@ char command[MAX_COMMAND_LENGTH];
 int interactive = isatty(STDIN_FILENO);
 int last_status = 0;
 
-if (isatty(STDIN_FILENO))
-{
-	printf("$ ");
-	fflush(stdout);
-}
 while (get_command(command, interactive))
 {
 char *trimmed_command = trim_whitespace(command);
@@ -127,7 +124,7 @@ if (strlen(trimmed_command) > 0)
 execute_command(trimmed_command, &last_status);
 }
 
-if (isatty(STDIN_FILENO))
+if (interactive)
 {
 	printf("$ ");
 	fflush(stdout);
