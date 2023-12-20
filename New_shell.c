@@ -83,14 +83,18 @@ else if (strcmp(argv[0], "exit") == 0)
 {
 exit(*last_status);
 }
-<<<<<<< HEAD
-else if ((p = fork()) == -1)
-=======
+
 else
 {
 p = fork();
 if (p == -1)
->>>>>>> Mitzael
+
+{
+perror("fork");
+exit(1);
+}
+}
+
 {
 perror("fork");
 exit(1);
