@@ -108,7 +108,7 @@ argv[i] = NULL;
 
 if (strcmp(argv[0], "env") == 0)
 {
-execute_env(environ);  /* Pass the environment to execute_env*/
+execute_env(environ);  /* Print the environment variables */
 }
 else if (strcmp(argv[0], "exit") == 0)
 {
@@ -133,6 +133,27 @@ else
 waitpid(p, &s, 0);
 *last_status = WIFEXITED(s) ? WEXITSTATUS(s) : *last_status;
 }
+}
+}
+/*----------------------------------------------------------------*/
+/**
+* execute_env - Execute the "env" built-in
+*/
+void execute_env(void)
+{
+char **env_ptr;
+
+if (environ == NULL)
+{
+fprintf(stderr, "Error: Environment is not properly set.\n");
+exit(1);
+}
+
+env_ptr = environ;
+while (*env_ptr != NULL)
+{
+printf("%s\n", *env_ptr);
+env_ptr++;
 }
 }
 
