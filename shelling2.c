@@ -76,6 +76,7 @@ char *trim_whitespace(char *str)
 
     return (str);
 }
+
 void execute_env(void)
 {
     char **env_ptr = environ;
@@ -83,11 +84,8 @@ void execute_env(void)
 
     while (*env_ptr != NULL)
     {
-        if (strcmp(*env_ptr, "_=/usr/bin/env") != 0)
-	  { 
-            printf("%s\n", *env_ptr);
-            length += strlen(*env_ptr) + 1;
-        }
+        printf("%s\n", *env_ptr);
+        length += strlen(*env_ptr) + 1;
         env_ptr++;
     }
 
