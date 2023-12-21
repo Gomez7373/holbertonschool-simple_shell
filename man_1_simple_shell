@@ -2,7 +2,7 @@
 
 .SH NAME
 
-Simple Shel
+Simple Shell
 
 .SH SYNOPSIS:
 
@@ -10,29 +10,25 @@ Simple Shell \- A simple UNIX command interpreter
 
 .SH DESCRIPTION:
 
-Simple Shell is a simple UNIX command interpreter designed for Holberton School.
+Simple Shell is a simple UNIX command interpreter designed for Holberton School. It supports interactive command entry, executiom of shell commands, and basic environment variable handling.
 
 .SH OPTIONS:
 .TP
 .B -h, --help - Display help message and exit.
 
 .SH COMMANDS:
-
+.TP
 .IP \(bu 2
-.B cd
-- Change the current working directory.
+.B trim_whitespace(str) -
+Remove leading and trailing whitespaces from a string.
 
 .IP \(bu 3
-.B exit
-- Exit the shell.
+.B get_command(command, interactive) -
+Read user input for the command.
 
 .IP \(bu 4
-.B env
-- Print the environment.
-
-.IP \(bu 5
-.B [COMMAND] [ARGUMENTS]...
-- Execute the specified command with arguments.
+.B execute_command(full_command, last_status) -
+Execute a shell command.
 
 .SH INTERACTIVE MODE:
 
@@ -42,24 +38,16 @@ Simple Shell is a simple UNIX command interpreter designed for Holberton School.
 .SH NON-INTERACTIVE MODE:
 
 	Simple shell can also be used in non-interactive mode by piping commands.
-	 For example: echo /bin/ls | ./simpleshell
+.TP
+For example: echo /bin/ls | ./simpleshell
 
 .SH ENVIRONMENT VARIABLE:
 .TP
+\fBPATH\fP -
+A colon-separated list of directories where the shell looks for executable files.
 
-.IP \(bu 2
-.B PATH
-
-.TP
-.IP \(bu 3
-The Simple shell executable must be in a directory listed in the PATH environment variable, or the full path to the executable must be provided.
-
-.SH EXIT STATUS:
-.TP
-.B (0) = Success.
-
-.TP
-.B (127) = Command not found.
+.SH Return Value
+The Simple Shell Program returns the exit status of the last command execute.
 
 .SH EXAMPLES:
 
@@ -68,6 +56,29 @@ Run the shell interactively: ./simpleshell
 
 .IP \(bu 3
 Run a command non-interactively: echo /bin/ls | ./simpleshell
+
+.SH SEE ALSO
+
+.TP
+.IP \(bu 2
+.BR fork
+
+.TP
+.IP \(bu 3
+.BR execvp
+
+.SH BUGS
+
+You can report any bug on:
+.TP
+.IP \(bu 2
+sgc.holberton.com
+.TP
+.IP \(bu 3
+abdiel.f@outlook.com
+.TP
+.IP \(bu 4
+7636@holbertonstudents.com
 
 .SH AUTHORS:
 .TP
