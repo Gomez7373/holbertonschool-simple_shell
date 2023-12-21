@@ -120,30 +120,3 @@ printf("\n");
 
 return (last_status);
 }
-/**
- * Main - Shell entry Point
- *
- * Return: Last command exit status
- */
-int main(void)
-{
-	char command[MAX_COMMAND_LENGTH];
-	int interactive = isatty(STDIN_FILENO);
-	int last_status = 0;
-if (signal(SIGINT, ctrlc_handler) == SIG_ERR)
-{
-perror("signal");
-return EXIT_FAILURE;
-}
-while (get_command(command, interactive))
-{
-char *trimmed_command = trim_whitespace(command);
-if (strlen(trimmed_command) > 0)
-{
-execute_command(trimmed_command, &last_status);
-}
-}
-if (interactive)
-pritnf("\n");
-return (last_status);
-}

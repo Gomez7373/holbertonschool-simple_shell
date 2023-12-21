@@ -18,7 +18,6 @@
 
 /*char **environ;*/
 extern char **environ;
-extern void ctrlc_handler(int signum);
 
 char *trim_whitespace(char *str);
 int get_command(char *command, int interactive);
