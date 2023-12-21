@@ -125,12 +125,9 @@ exit(1);
 
 while (*envp != NULL)
 {
-printf("%s", *envp);
+printf("%s\n", *envp);
 envp++;
 
-/* Print a newline character unless it's the last line*/
-if (*envp != NULL)
-printf("\n");
 }
 }
 /*---------------------------------------------------*/
