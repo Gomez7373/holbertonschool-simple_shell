@@ -125,9 +125,11 @@ exit(1);
 
 while (*envp != NULL)
 {
+if (*(envp + 1) != NULL)
 printf("%s\n", *envp);
+else
+printf("%s", *envp);
 envp++;
-
 }
 }
 /*---------------------------------------------------*/
