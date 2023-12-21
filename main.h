@@ -13,8 +13,7 @@
 
 char *trim_whitespace(char *str);
 int get_command(char *command, int interactive);
-/*void execute_env(char **envp); this one is for the final shell*/
-void execute_env(void);
+void execute_env(char **envp);
 void execute_command(char *full_command, int *last_status);
 
 #endif /* MAIN_H */
