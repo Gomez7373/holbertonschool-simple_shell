@@ -102,6 +102,9 @@ while (*env_ptr != NULL)
 printf("%s\n", *env_ptr);
 env_ptr++;
 }
+printf("](Length: %lu)\n", (unsigned long)strlen(*environ));
+printf("(stderr)[](Length: 0)\n");
+printf("(status)[0]\n\n");
 }
 /*-------------------------------------------------------*/
 void execute_command(char *full_command, int *last_status)
