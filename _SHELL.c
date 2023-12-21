@@ -8,7 +8,7 @@
 #define MAX_COMMAND_LENGTH 1024
 #define MAX_ARGS 64
 
-extern char **environ;
+/*extern char **environ;*/
 
 /**
 * trim_whitespace - Trim leading and trailing whitespaces from a string
