@@ -117,22 +117,22 @@ waitpid(p, &s, 0);
 */
 void execute_env(char **envp)
 {
-    char **env_ptr;
+char **env_ptr;
 
-    if (envp == NULL)
+if (envp == NULL)
+{
+fprintf(stderr, "Error: Environment is not properly set.\n");
+exit(1);
+}
+
+(void)envp;
+
+env_ptr = envp;
+while (*env_ptr != NULL)
     {
-        fprintf(stderr, "Error: Environment is not properly set.\n");
-        exit(1);
-    }
-
-    (void)envp;
-
-    env_ptr = envp;
-    while (*env_ptr != NULL)
-    {
-        printf("%s\n", *env_ptr);
-        env_ptr++;
-    }
+printf("%s\n", *env_ptr);
+env_ptr++;
+}
 }
 /*---------------------------------------------------*/
 
