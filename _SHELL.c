@@ -1,14 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/wait.h>
-#include <ctype.h>
-
-#define MAX_COMMAND_LENGTH 1024
-#define MAX_ARGS 64
-
-extern char **environ;
+#include "main.h"
 
 /**
 * trim_whitespace - Trim leading and trailing whitespaces from a string
@@ -67,7 +57,6 @@ void execute_command(char *full_command, int *last_status)
 char *argv[MAX_ARGS], *t;
 int i = 0, s, j;
 pid_t p = -1;
-
 for (t = strtok(full_command, " ");
 t && i < MAX_ARGS - 1; t = strtok(NULL, " "))
 argv[i++] = t;
@@ -75,13 +64,8 @@ argv[i] = NULL;
 if (strcmp(argv[0], "env") == 0)
 {
 if (environ != NULL)
-{
 for (j = 0; environ[j] != NULL; ++j)
-{
 printf("%s\n", environ[j]);
-}
-}
-return;
 }
 else if (strcmp(argv[0], "exit") == 0)
 {
@@ -97,9 +81,7 @@ return;
 }
 p = fork();
 if (p == -1)
-{
 perror("fork");
-}
 else if (p == 0)
 {
 execvp(argv[0], argv);
