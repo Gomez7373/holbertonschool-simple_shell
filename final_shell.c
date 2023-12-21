@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <ctype.h>
-
+#include "main.h"
 #define MAX_COMMAND_LENGTH 1024
 #define MAX_ARGS 64
 
@@ -62,30 +62,6 @@ end--;
 
 return (str);
 }
-/*------------------------------------------------------------------*/
-/**
- * execute_env - Execute the "env" built-in
- *
- * @envp: Pointer to the environment variables array
- */
-
-void execute_env(char **envp)
-{
-char **env_ptr;
-
-if (envp == NULL)
-{
-fprintf(stderr, "Error: Environment is not properly set.\n");
-exit(1);
-}
-
-env_ptr = envp;
-while (*env_ptr != NULL)
-{
-printf("%s\n", *env_ptr);
-env_ptr++;
-}
-}
 
 /*------------------------------------------------------------------*/
 
@@ -139,25 +115,25 @@ waitpid(p, &s, 0);
 /**
 * execute_env - Execute the "env" built-in
 */
-void execute_env(void)
+void execute_env(char **envp)
 {
-char **env_ptr;
+    char **env_ptr;
 
-if (environ == NULL)
-{
-fprintf(stderr, "Error: Environment is not properly set.\n");
-exit(1);
+    if (envp == NULL)
+    {
+        fprintf(stderr, "Error: Environment is not properly set.\n");
+        exit(1);
+    }
+
+    (void)envp;
+
+    env_ptr = envp;
+    while (*env_ptr != NULL)
+    {
+        printf("%s\n", *env_ptr);
+        env_ptr++;
+    }
 }
-
-env_ptr = environ;
-while (*env_ptr != NULL)
-{
-printf("%s\n", *env_ptr);
-env_ptr++;
-}
-}
-
-
 /*---------------------------------------------------*/
 
 
