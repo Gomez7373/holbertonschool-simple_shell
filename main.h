@@ -10,7 +10,7 @@
 #define MAX_ARGS 64
 
 /*char **environ;*/
-
+extern char **environ;
 char *trim_whitespace(char *str);
 int get_command(char *command, int interactive);
 void execute_env(char **envp);
