@@ -117,17 +117,21 @@ waitpid(p, &s, 0);
 */
 void execute_env(char **envp)
 {
-    if (envp == NULL)
-    {
-        fprintf(stderr, "Error: Environment is not properly set.\n");
-        exit(1);
-    }
+if (envp == NULL)
+{
+fprintf(stderr, "Error: Environment is not properly set.\n");
+exit(1);
+}
 
-    while (*envp != NULL)
-    {
-        printf("%s\n", *envp);
-        envp++;
-    }
+while (*envp != NULL)
+{
+printf("%s", *envp);
+envp++;
+
+/* Print a newline character unless it's the last line*/
+if (*envp != NULL)
+printf("\n");
+}
 }
 /*---------------------------------------------------*/
 
