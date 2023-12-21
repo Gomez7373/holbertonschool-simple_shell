@@ -68,14 +68,10 @@ char *argv[MAX_ARGS], *t;
 int i = 0, s, j;
 pid_t p = -1;
 
-/* Splitting the command into arguments */
 for (t = strtok(full_command, " ");
 t && i < MAX_ARGS - 1; t = strtok(NULL, " "))
 argv[i++] = t;
-
 argv[i] = NULL;
-
-/* Handling the 'env' command */
 if (strcmp(argv[0], "env") == 0)
 {
 if (environ != NULL)
@@ -87,25 +83,18 @@ printf("%s\n", environ[j]);
 }
 return;
 }
-
-/* Handling the 'exit' command */
 else if (strcmp(argv[0], "exit") == 0)
 {
 exit(*last_status);
 }
-
-/* Handling other commands */
 else
 {
-/* Check if PATH is set for external commands */
 if (getenv("PATH") == NULL && strcmp(argv[0], "ls") == 0)
 {
 fprintf(stderr, "./hsh: 1: %s: not found\n", argv[0]);
 *last_status = 127;
 return;
 }
-
-/* Creating a child process */
 p = fork();
 if (p == -1)
 {
@@ -124,8 +113,6 @@ waitpid(p, &s, 0);
 }
 }
 }
-
-
 /**
 * main - Shell entry point
 *
