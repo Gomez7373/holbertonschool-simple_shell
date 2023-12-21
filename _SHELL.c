@@ -8,7 +8,7 @@
 #define MAX_COMMAND_LENGTH 1024
 #define MAX_ARGS 64
 
-/*extern char **environ;*/
+extern char **environ;
 
 /**
 * trim_whitespace - Trim leading and trailing whitespaces from a string
@@ -67,7 +67,6 @@ void execute_command(char *full_command, int *last_status)
 char *argv[MAX_ARGS], *t;
 int i = 0, s, j;
 pid_t p = -1;
-char environ;/*here*/
 
 for (t = strtok(full_command, " ");
 t && i < MAX_ARGS - 1; t = strtok(NULL, " "))
