@@ -75,9 +75,9 @@ end--;
 return (str);
 }
 /*------------------------------------------------------*/
-void execute_env(void)
+void execute_env(char **envp)
 {
-char **env_ptr = environ;
+char **env_ptr = envp;
 
 if (env_ptr == NULL)
 {
@@ -96,7 +96,7 @@ printf("(stderr)[](Length: 0)\n");
 printf("(status)[0]\n\n");
 
 printf("Environment:\n");
-env_ptr = environ;
+env_ptr = envp;
 while (*env_ptr != NULL)
 {
 printf("%s\n", *env_ptr);
@@ -122,7 +122,7 @@ argv[i] = NULL;
 
 if (strcmp(argv[0], "env") == 0)
 {
-execute_env();  /* Call execute_env without passing environ*/
+execute_env(environ);
 }
 else if (strcmp(argv[0], "exit") == 0)
 {
