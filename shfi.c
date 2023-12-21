@@ -78,6 +78,7 @@ return (str);
 void execute_env(char **envp)
 {
 char **env_ptr = envp;
+int length = 0;
 
 if (env_ptr == NULL)
 {
@@ -92,7 +93,7 @@ printf("%s\n", *env_ptr);
 length += strlen(*env_ptr) + 1;
 env_ptr++;
 }
-printf("](Length: %lu)\n", length;
+printf("](Length: %d)\n", length);
 printf("(stderr)[](Length: 0)\n");
 printf("(status)[0]\n\n");
 
@@ -103,7 +104,7 @@ while (*env_ptr != NULL)
 printf("%s\n", *env_ptr);
 env_ptr++;
 }
-printf("](Length: %lu)\n", (unsigned long)strlen(*environ));
+printf("](Length: %d)\n", length);
 printf("(stderr)[](Length: 0)\n");
 printf("(status)[0]\n\n");
 }
