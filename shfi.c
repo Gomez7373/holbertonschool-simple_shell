@@ -77,37 +77,38 @@ return (str);
 /*------------------------------------------------------*/
 void execute_env(char **envp)
 {
-char **env_ptr = envp;
-int length = 0;
+    char **env_ptr = envp;
+    size_t length = 0;
 
-if (env_ptr == NULL)
-{
-fprintf(stderr, "Error: Environment is not properly set.\n");
-exit(1);
+    if (env_ptr == NULL)
+    {
+        fprintf(stderr, "Error: Environment is not properly set.\n");
+        exit(1);
+    }
+
+    printf("(stdout)[");
+    while (*env_ptr != NULL)
+    {
+        printf("%s\n", *env_ptr);
+        length += strlen(*env_ptr) +1;
+        env_ptr++;
+    }
+    printf("](Length: %lu)\n", length);
+    printf("(stderr)[](Length: 0)\n");
+    printf("(status)[0]\n\n");
+
+    printf("Environment:\n");
+    env_ptr = envp;
+    while (*env_ptr != NULL)
+    {
+        printf("%s\n", *env_ptr);
+        env_ptr++;
+    }
+    printf("(Length: %lu)\n", (unsigned long)length);
+    printf("(stderr)[](Length: 0)\n");
+    printf("(status)[0]\n\n");
 }
 
-printf("(stdout)[");
-while (*env_ptr != NULL)
-{
-printf("%s\n", *env_ptr);
-length += strlen(*env_ptr) + 1;
-env_ptr++;
-}
-printf("](Length: %d)\n", length);
-printf("(stderr)[](Length: 0)\n");
-printf("(status)[0]\n\n");
-
-printf("Environment:\n");
-env_ptr = envp;
-while (*env_ptr != NULL)
-{
-printf("%s\n", *env_ptr);
-env_ptr++;
-}
-printf("](Length: %d)\n", length);
-printf("(stderr)[](Length: 0)\n");
-printf("(status)[0]\n\n");
-}
 /*-------------------------------------------------------*/
 void execute_command(char *full_command, int *last_status)
 {
